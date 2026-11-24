@@ -196,8 +196,8 @@ improvements and demo execution are recorded separately when credentials permit.
 
 See `docs/evidence/baseline-*.{json,txt}` and `after-*.{json,txt}`. Log paths are
 normalized for portability; coverage numbers are unchanged. Both application
-typechecks and production builds passed locally. The 36 deterministic agent tests pass. Agent test evidence is in
-`docs/evidence/agent-tests.txt`. This is not a claim that GitHub Actions ran.
+typechecks and production builds passed locally. The 37 deterministic agent tests pass. Agent test evidence is in
+`docs/evidence/agent-tests.txt`. The initial main-branch [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45477775540) passed. The actual Docker sandbox also passed both application typechecks and all 98 application tests; see `docs/evidence/sandbox-smoke.txt`.
 
 ## GitHub Actions
 
@@ -271,3 +271,26 @@ The separate validator still runs the existing suites.
 The working assumption is that the default branch and its agent dependencies are
 trusted, while every PR may be hostile. The workflow uses no `pull_request_target`,
 performs no automatic merges and makes no application-branch commits.
+
+## Delivery and remaining live setup
+
+Repository: [maxikgreat/taskly-unit-test-agent](https://github.com/maxikgreat/taskly-unit-test-agent).
+
+No live DeepSeek calls were made: the API key was unavailable and live execution
+was explicitly deferred. This means autonomous generation, live API reasoning
+retention and a completed agent PR report have not yet been verified against a
+real model. The mocked SDK and orchestration tests do not substitute for that
+evidence. Missing-key executions export a clear failure report with zero API
+requests; the workflow never claims successful generation.
+
+Add the secret using GitHub Settings → Environments → test-agent, or run the
+following interactive command (do not place the secret in a command argument):
+
+```sh
+gh secret set DEEPSEEK_API_KEY --repo maxikgreat/taskly-unit-test-agent --env test-agent
+```
+
+Then rerun the failed `Unit Test Agent` workflow for the demo PR. Download and
+review the proposed tests and `tests.patch`, inspect actual validation and coverage,
+and apply the patch only after reviewing it. GitHub reporting uses the built-in
+Actions token; no additional AI subscription is needed.

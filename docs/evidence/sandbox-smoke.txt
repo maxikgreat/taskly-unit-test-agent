@@ -1,0 +1,118 @@
+passed
+Validated proposal applied to approved test paths. Tests still require execution.
+
+> taskly-app-node-frontend@1.0.0 typecheck
+> tsc --noEmit
+
+
+> taskly-app-node-frontend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /work/frontend
+      Coverage enabled with v8
+
+ ✓ src/features/todos/hooks/mutations.test.tsx (7 tests) 59ms
+ ✓ src/features/todos/TodosPage.test.tsx (1 test) 156ms
+ ✓ src/lib/http.test.ts (9 tests) 27ms
+ ✓ src/features/todos/components/TodoEditor.test.tsx (1 test) 171ms
+ ✓ src/features/todos/components/TodoForm.test.tsx (2 tests) 485ms
+ ✓ src/features/todos/components/DeleteTodoDialog.test.tsx (1 test) 219ms
+ ✓ src/features/todos/components/TodoFilters.test.tsx (1 test) 260ms
+ ✓ src/components/SuccessNotice.test.tsx (2 tests) 69ms
+ ✓ src/features/todos/components/TodoItem.test.tsx (1 test) 275ms
+ ✓ src/features/todos/api/todos.test.ts (2 tests) 15ms
+ ✓ src/features/todos/components/TodoList.test.tsx (1 test) 131ms
+ ✓ src/features/todos/utils/todos.test.ts (2 tests) 9ms
+ ✓ src/components/ApplicationHeader.test.tsx (1 test) 190ms
+ ✓ src/features/todos/components/TodosHeader.test.tsx (1 test) 296ms
+ ✓ src/App.test.tsx (1 test) 147ms
+ ✓ src/hooks/useNotice.test.ts (1 test) 61ms
+
+ Test Files  16 passed (16)
+      Tests  34 passed (34)
+   Start at  20:08:41
+   Duration  24.36s (transform 582ms, setup 4.53s, import 1.66s, tests 2.57s, environment 10.64s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   66.07 |    53.28 |   62.33 |   66.22 |                   
+ src               |     100 |      100 |     100 |     100 |                   
+  App.tsx          |     100 |      100 |     100 |     100 |                   
+ src/app           |       0 |        0 |       0 |       0 |                   
+  AppProviders.tsx |       0 |        0 |       0 |       0 | 14                
+ src/components    |     100 |      100 |     100 |     100 |                   
+  ...ionHeader.tsx |     100 |      100 |     100 |     100 |                   
+  ...essNotice.tsx |     100 |      100 |     100 |     100 |                   
+ ...features/todos |   48.14 |    61.11 |   27.27 |      50 |                   
+  TodosPage.tsx    |   48.14 |    61.11 |   27.27 |      50 | 28-34,53,81-106   
+ ...ures/todos/api |   57.14 |      100 |      50 |   57.14 |                   
+  todos.ts         |   57.14 |      100 |      50 |   57.14 | 21-33             
+ ...dos/components |      70 |    50.79 |   65.38 |   71.73 |                   
+  ...odoDialog.tsx |   33.33 |     62.5 |   33.33 |    37.5 | 19-22,40          
+  TodoEditor.tsx   |   83.33 |     62.5 |     100 |      90 | 27                
+  ...mptyState.tsx |       0 |        0 |       0 |       0 | 13                
+  TodoFilters.tsx  |     100 |      100 |     100 |     100 |                   
+  TodoForm.tsx     |   88.23 |    63.63 |   77.77 |    87.5 | 67,91             
+  TodoItem.tsx     |     100 |    35.71 |     100 |     100 | 32-64             
+  TodoList.tsx     |      20 |     62.5 |      20 |      20 | 43-49             
+  TodosHeader.tsx  |     100 |      100 |     100 |     100 |                   
+ ...es/todos/hooks |      75 |      100 |   78.94 |      72 |                   
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+  ...odoFilters.ts |       0 |      100 |       0 |       0 | 6-9               
+  useTodosBusy.ts  |       0 |      100 |       0 |       0 | 5                 
+  useTodosQuery.ts |       0 |      100 |       0 |       0 | 6-8               
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+ ...es/todos/utils |   55.55 |    33.33 |   66.66 |      52 |                   
+  todos.ts         |   55.55 |    33.33 |   66.66 |      52 | 10,12,14-20,50-66 
+ src/hooks         |   54.54 |       75 |      40 |   71.42 |                   
+  useNotice.ts     |   54.54 |       75 |      40 |   71.42 | 8-9               
+ src/lib           |     100 |      100 |     100 |     100 |                   
+  http.ts          |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------
+
+> taskly-app-node-backend@1.0.0 typecheck
+> tsc --noEmit
+
+
+> taskly-app-node-backend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /work/backend
+      Coverage enabled with v8
+
+ ✓ tests/http-errors.test.ts (16 tests) 315ms
+ ✓ tests/repository.test.ts (11 tests) 36ms
+ ✓ tests/validators.test.ts (27 tests) 24ms
+ ✓ tests/router.test.ts (6 tests) 91ms
+ ✓ tests/mappers.test.ts (4 tests) 13ms
+
+ Test Files  5 passed (5)
+      Tests  64 passed (64)
+   Start at  20:09:12
+   Duration  3.21s (transform 246ms, setup 0ms, import 1.40s, tests 478ms, environment 1ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   65.11 |    81.25 |   71.87 |   66.05 |                   
+ src               |      84 |    92.85 |      80 |      85 |                   
+  factory.ts       |   95.45 |    92.85 |     100 |     100 | 20                
+  main.ts          |       0 |      100 |       0 |       0 | 3-5               
+ src/api           |     100 |      100 |     100 |     100 |                   
+  health.ts        |     100 |      100 |     100 |     100 |                   
+ src/core          |    4.65 |        0 |   11.11 |    5.55 |                   
+  config.ts        |       0 |        0 |       0 |       0 | 4-19              
+  database.ts      |   66.66 |      100 |      50 |   66.66 | 12                
+  lifespan.ts      |       0 |        0 |       0 |       0 | 8-31              
+ ...features/todos |     100 |      100 |     100 |     100 |                   
+  mappers.ts       |     100 |      100 |     100 |     100 |                   
+  repository.ts    |     100 |      100 |     100 |     100 |                   
+  router.ts        |     100 |      100 |     100 |     100 |                   
+  validators.ts    |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------

@@ -1,22 +1,22 @@
 {
   "total": {
     "lines": {
-      "total": 198,
-      "covered": 179,
+      "total": 199,
+      "covered": 180,
       "skipped": 0,
-      "pct": 90.4
+      "pct": 90.45
     },
     "statements": {
-      "total": 262,
-      "covered": 221,
+      "total": 263,
+      "covered": 222,
       "skipped": 0,
-      "pct": 84.35
+      "pct": 84.41
     },
     "functions": {
-      "total": 41,
-      "covered": 37,
+      "total": 42,
+      "covered": 38,
       "skipped": 0,
-      "pct": 90.24
+      "pct": 90.47
     },
     "branches": {
       "total": 202,
@@ -33,22 +33,22 @@
   },
   "/workspace/taskly/agent/src/agent.ts": {
     "lines": {
-      "total": 104,
-      "covered": 88,
+      "total": 105,
+      "covered": 89,
       "skipped": 0,
-      "pct": 84.61
+      "pct": 84.76
     },
     "functions": {
-      "total": 10,
-      "covered": 9,
+      "total": 11,
+      "covered": 10,
       "skipped": 0,
-      "pct": 90
+      "pct": 90.9
     },
     "statements": {
-      "total": 139,
-      "covered": 107,
+      "total": 140,
+      "covered": 108,
       "skipped": 0,
-      "pct": 76.97
+      "pct": 77.14
     },
     "branches": {
       "total": 102,
