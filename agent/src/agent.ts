@@ -44,9 +44,13 @@ export interface Report {
 }
 export interface AgentOptions { root: string; config: Config; llm: LanguageModel; base?: string; head?: string; runner?: TestRunner }
 
+export function initialReport(summary: string): Report {
+  return { status: 'failed', summary, limitations: [], skills: [], files: [], validation: [], usage: { requests: 0, promptTokens: 0, completionTokens: 0, totalTokens: 0, cacheHitTokens: 0 } };
+}
+
 export async function runAgent(options: AgentOptions): Promise<{ report: Report; proposal: Proposal }> {
   const { root, config, llm } = options;
-  const report: Report = { status: 'failed', summary: 'Agent did not complete', limitations: [], skills: [], files: [], validation: [], usage: { requests: 0, promptTokens: 0, completionTokens: 0, totalTokens: 0, cacheHitTokens: 0 } };
+  const report = initialReport('Agent did not complete');
   let proposal: Proposal = { files: [] };
   let analyzed = false;
   let revision = 0;

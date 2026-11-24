@@ -196,8 +196,8 @@ improvements and demo execution are recorded separately when credentials permit.
 
 See `docs/evidence/baseline-*.{json,txt}` and `after-*.{json,txt}`. Log paths are
 normalized for portability; coverage numbers are unchanged. Both application
-typechecks and production builds passed locally. The 36 deterministic agent tests pass. Agent test evidence is in
-`docs/evidence/agent-tests.txt`. This is not a claim that GitHub Actions ran.
+typechecks and production builds passed locally. The 39 deterministic agent tests pass. Agent test evidence is in
+`docs/evidence/agent-tests.txt`. The initial main-branch [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45477775540) passed. The actual Docker sandbox also passed both application typechecks and all 98 application tests; see `docs/evidence/sandbox-smoke.txt`.
 
 ## GitHub Actions
 
@@ -219,6 +219,11 @@ only approved files changed, and exports the patch and evidence. Reporting runs
 on a third runner; it only reads bounded artifacts and posts/updates a bot comment
 if the PR head still matches. All privileged JS is static workflow code. No PR
 description, branch name or generated text is interpolated as executable code.
+
+The validator imports its policy and retains the checked proposal before running
+any PR scripts. It rejects test content changed during execution. Deterministic
+tests simulate scripts replacing the proposal or altering staged tests to verify
+these boundaries; command simulation is not counted as application execution.
 
 Configuration:
 
@@ -271,3 +276,38 @@ The separate validator still runs the existing suites.
 The working assumption is that the default branch and its agent dependencies are
 trusted, while every PR may be hostile. The workflow uses no `pull_request_target`,
 performs no automatic merges and makes no application-branch commits.
+
+## Delivery and remaining live setup
+
+Repository: [maxikgreat/taskly-unit-test-agent](https://github.com/maxikgreat/taskly-unit-test-agent).
+
+Demonstration: [PR #1 — priority filtering](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1).
+The feature adds a priority dropdown alongside status/search/sort and a validated
+optional priority query on the listing API. Existing tests and typechecks pass.
+The [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45478559978)
+passed for all three suites. The
+[agent workflow](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45478687210)
+failed at the missing-key guard, skipped generated-test validation, and
+[posted its actual failure report](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1#issuecomment-7143251846)
+with zero API requests. Context checks, coverage-artifact downloads and the
+separate reporting job completed successfully. No live no-test-change PR was
+run; that decision path is demonstrated in mocked orchestration tests.
+
+No live DeepSeek calls were made: the API key was unavailable and live execution
+was explicitly deferred. This means autonomous generation, live API reasoning
+retention and a completed agent PR report have not yet been verified against a
+real model. The mocked SDK and orchestration tests do not substitute for that
+evidence. Missing-key executions export a clear failure report with zero API
+requests; the workflow never claims successful generation.
+
+Add the secret using GitHub Settings → Environments → test-agent, or run the
+following interactive command (do not place the secret in a command argument):
+
+```sh
+gh secret set DEEPSEEK_API_KEY --repo maxikgreat/taskly-unit-test-agent --env test-agent
+```
+
+Then rerun the failed `Unit Test Agent` workflow for the demo PR. Download and
+review the proposed tests and `tests.patch`, inspect actual validation and coverage,
+and apply the patch only after reviewing it. GitHub reporting uses the built-in
+Actions token; no additional AI subscription is needed.

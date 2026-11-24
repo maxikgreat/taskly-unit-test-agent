@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { configuration } from './config.ts';
 import { deepSeek } from './llm.ts';
-import { runAgent } from './agent.ts';
+import { runAgent, initialReport } from './agent.ts';
 import { markdownReport } from './report.ts';
 import { applyProposal, redact } from './safety.ts';
 import { dockerRunner } from './runner.ts';
@@ -18,7 +18,9 @@ async function main() {
   }
   if (!!values.base !== !!values.head) throw new Error('Supply both --base and --head');
   const config = configuration();
-  const result = await runAgent({ root, config, llm: deepSeek(config), base: values.base, head: values.head, runner: values.execute ? dockerRunner(root, config.testTimeoutMs) : undefined });
+  const result = process.env.DEEPSEEK_API_KEY
+    ? await runAgent({ root, config, llm: deepSeek(config), base: values.base, head: values.head, runner: values.execute ? dockerRunner(root, config.testTimeoutMs) : undefined })
+    : { proposal: { files: [] }, report: initialReport('DEEPSEEK_API_KEY is not configured. No live model request or test generation occurred.') };
   const out = path.resolve(values.out);
   await mkdir(out, { recursive: true });
   await writeFile(path.join(out, 'proposal.json'), redact(JSON.stringify(result.proposal, null, 2)));

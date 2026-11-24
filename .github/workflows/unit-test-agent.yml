@@ -30,6 +30,7 @@ jobs:
             const pr = prs.find(p => p.state === 'open' && p.head.sha === run.head_sha && p.head.repo?.full_name === `${context.repo.owner}/${context.repo.repo}`);
             if (!pr) { core.notice('Forked, stale, or closed PR: no secret-bearing agent run. Standard tests still run.'); return; }
             const { data: current } = await github.rest.pulls.get({ ...context.repo, pull_number: pr.number });
+            if (current.head.sha !== run.head_sha || current.state !== 'open') { core.notice('PR changed during lookup; no agent run.'); return; }
             core.setOutput('eligible', 'true');
             core.setOutput('number', String(pr.number));
             core.setOutput('head', current.head.sha);
@@ -124,7 +125,7 @@ jobs:
         working-directory: trusted/agent
       - name: Validate baseline, apply path policy, validate tests and export patch
         id: validation
-        run: node trusted/agent/scripts/validate.mjs source proposal validation
+        run: node --import ./trusted/agent/node_modules/tsx/dist/loader.mjs trusted/agent/scripts/validate.mjs source proposal validation
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

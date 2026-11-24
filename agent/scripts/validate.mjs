@@ -3,14 +3,13 @@
 import { spawnSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { applyProposal, validateProposal } from '../src/safety.ts';
 
 const [sourceArg, proposalArg, outArg] = process.argv.slice(2);
 const source = path.resolve(sourceArg);
 const proposal = path.resolve(proposalArg);
 const out = path.resolve(outArg);
 mkdirSync(out, { recursive: true });
-const agent = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const env = { PATH: process.env.PATH, HOME: process.env.HOME, CI: 'true', NO_COLOR: '1' };
 const results = [];
 let failed = false;
@@ -35,6 +34,9 @@ function coverage(suite, stage) {
 }
 const metrics = {};
 try {
+  // Load the trusted policy and retain the proposal in this process BEFORE any
+  // PR lifecycle script/test can modify sibling files in the ephemeral runner.
+  const checkedProposal = validateProposal(JSON.parse(readFileSync(path.join(proposal, 'proposal.json'), 'utf8')));
   const initial = spawnSync('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: source, env, encoding: 'utf8', timeout: 10000 });
   if (initial.status !== 0 || initial.stdout.trim()) throw new Error('Validation needs a clean source checkout');
   for (const suite of ['frontend', 'backend']) {
@@ -43,8 +45,8 @@ try {
     if (!command(`baseline-${suite}`, 'npm', ['run', 'test:coverage'], cwd)) throw new Error('Baseline tests failed; proposal not applied');
     metrics[`before-${suite}`] = coverage(suite, 'before');
   }
-  // Run the trusted policy and CLI, not code supplied in the PR.
-  if (!command('apply', process.execPath, [path.join(agent, 'node_modules/tsx/dist/cli.mjs'), path.join(agent, 'src/cli.ts'), '--root', source, '--apply', path.join(proposal, 'proposal.json')], agent)) throw new Error('Proposal policy rejected');
+  await applyProposal(source, checkedProposal);
+  results.push({ label: 'apply', passed: true });
   for (const suite of ['frontend', 'backend']) {
     const cwd = path.join(source, suite);
     command(`typecheck-${suite}`, 'npm', ['run', 'typecheck'], cwd);
@@ -52,7 +54,10 @@ try {
     metrics[`after-${suite}`] = passed ? coverage(suite, 'after') : ['unavailable', 'unavailable', 'unavailable', 'unavailable'];
   }
   // Include new tests in the patch without staging content or committing.
-  const files = JSON.parse(readFileSync(path.join(proposal, 'proposal.json'), 'utf8')).files;
+  const files = checkedProposal.files;
+  for (const file of files) {
+    if (readFileSync(path.join(source, file.path), 'utf8') !== file.content) throw new Error('Execution changed proposed tests; patch export blocked');
+  }
   const status = spawnSync('git', ['status', '--porcelain', '-z', '--untracked-files=all'], { cwd: source, env, encoding: 'utf8', timeout: 10000 });
   const allowed = new Set(files.map(f => f.path));
   if (status.status !== 0 || status.stdout.split('\0').filter(Boolean).some(entry => !allowed.has(entry.slice(3)))) throw new Error('Validation modified protected paths; patch export blocked');
