@@ -307,7 +307,7 @@ following interactive command (do not place the secret in a command argument):
 gh secret set DEEPSEEK_API_KEY --repo maxikgreat/taskly-unit-test-agent --env test-agent
 ```
 
-Then rerun the failed `Unit Test Agent` workflow for the demo PR. Download and
+Then rerun the latest failed `Unit Test Agent` workflow for the demo PR’s current head. Older runs safely skip stale commits. Download and
 review the proposed tests and `tests.patch`, inspect actual validation and coverage,
 and apply the patch only after reviewing it. GitHub reporting uses the built-in
 Actions token; no additional AI subscription is needed.
