@@ -1,0 +1,53 @@
+
+> taskly-app-node-frontend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /workspace/taskly/frontend
+      Coverage enabled with v8
+
+
+ Test Files  14 passed (14)
+      Tests  18 passed (18)
+   Start at  20:58:17
+   Duration  5.79s (transform 1.25s, setup 4.77s, import 3.86s, tests 3.40s, environment 17.04s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   46.42 |    43.79 |   40.25 |   47.68 |                   
+ src/app           |       0 |        0 |       0 |       0 |                   
+  AppProviders.tsx |       0 |        0 |       0 |       0 | 14                
+ ...features/todos |   48.14 |    61.11 |   27.27 |      50 |                   
+  TodosPage.tsx    |   48.14 |    61.11 |   27.27 |      50 | 28-34,53,81-106   
+ ...ures/todos/api |   57.14 |      100 |      50 |   57.14 |                   
+  todos.ts         |   57.14 |      100 |      50 |   57.14 | 21-33             
+ ...dos/components |      70 |    50.79 |   65.38 |   71.73 |                   
+  ...odoDialog.tsx |   33.33 |     62.5 |   33.33 |    37.5 | 19-22,40          
+  TodoEditor.tsx   |   83.33 |     62.5 |     100 |      90 | 27                
+  ...mptyState.tsx |       0 |        0 |       0 |       0 | 13                
+  TodoForm.tsx     |   88.23 |    63.63 |   77.77 |    87.5 | 67,91             
+  TodoItem.tsx     |     100 |    35.71 |     100 |     100 | 32-64             
+  TodoList.tsx     |      20 |     62.5 |      20 |      20 | 43-49             
+ ...es/todos/hooks |       0 |        0 |       0 |       0 |                   
+  ...doMutation.ts |       0 |        0 |       0 |       0 | 7-16              
+  ...doMutation.ts |       0 |      100 |       0 |       0 | 7-14              
+  ...odoFilters.ts |       0 |      100 |       0 |       0 | 6-9               
+  useTodosBusy.ts  |       0 |      100 |       0 |       0 | 5                 
+  useTodosQuery.ts |       0 |      100 |       0 |       0 | 6-8               
+  ...doMutation.ts |       0 |        0 |       0 |       0 | 7-15              
+ ...es/todos/utils |   55.55 |    33.33 |   66.66 |      52 |                   
+  todos.ts         |   55.55 |    33.33 |   66.66 |      52 | 10,12,14-20,50-66 
+ src/hooks         |   54.54 |       75 |      40 |   71.42 |                   
+  useNotice.ts     |   54.54 |       75 |      40 |   71.42 | 8-9               
+ src/lib           |       0 |        0 |       0 |       0 |                   
+  http.ts          |       0 |        0 |       0 |       0 | 3-24              
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 46.42% ( 78/168 )
+Branches     : 43.79% ( 60/137 )
+Functions    : 40.25% ( 31/77 )
+Lines        : 47.68% ( 72/151 )
+================================================================================

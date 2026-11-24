@@ -1,0 +1,32 @@
+
+> taskly-unit-test-agent@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /workspace/taskly/agent
+      Coverage enabled with v8
+
+
+ Test Files  4 passed (4)
+      Tests  36 passed (36)
+   Start at  21:05:46
+   Duration  1.20s (transform 440ms, setup 0ms, import 1.10s, tests 819ms, environment 1ms)
+
+ % Coverage report from v8
+-----------|---------|----------|---------|---------|-------------------
+File       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------|---------|----------|---------|---------|-------------------
+All files  |   84.35 |    77.22 |   90.24 |    90.4 |                   
+ agent.ts  |   76.97 |    66.66 |      90 |   84.61 | 81,84-91,96-102   
+ config.ts |   88.88 |    92.85 |     100 |     100 | 14                
+ llm.ts    |     100 |    84.61 |     100 |     100 | 26,31             
+ report.ts |      50 |       80 |      40 |      40 | 9-12              
+ safety.ts |   92.18 |    87.71 |     100 |     100 | 20,36,44,56-58,74 
+-----------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 84.35% ( 221/262 )
+Branches     : 77.22% ( 156/202 )
+Functions    : 90.24% ( 37/41 )
+Lines        : 90.4% ( 179/198 )
+================================================================================

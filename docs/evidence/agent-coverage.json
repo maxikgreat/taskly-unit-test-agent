@@ -1,0 +1,216 @@
+{
+  "total": {
+    "lines": {
+      "total": 198,
+      "covered": 179,
+      "skipped": 0,
+      "pct": 90.4
+    },
+    "statements": {
+      "total": 262,
+      "covered": 221,
+      "skipped": 0,
+      "pct": 84.35
+    },
+    "functions": {
+      "total": 41,
+      "covered": 37,
+      "skipped": 0,
+      "pct": 90.24
+    },
+    "branches": {
+      "total": 202,
+      "covered": 156,
+      "skipped": 0,
+      "pct": 77.22
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": "Unknown"
+    }
+  },
+  "/workspace/taskly/agent/src/agent.ts": {
+    "lines": {
+      "total": 104,
+      "covered": 88,
+      "skipped": 0,
+      "pct": 84.61
+    },
+    "functions": {
+      "total": 10,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 90
+    },
+    "statements": {
+      "total": 139,
+      "covered": 107,
+      "skipped": 0,
+      "pct": 76.97
+    },
+    "branches": {
+      "total": 102,
+      "covered": 68,
+      "skipped": 0,
+      "pct": 66.66
+    }
+  },
+  "/workspace/taskly/agent/src/config.ts": {
+    "lines": {
+      "total": 7,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 9,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 88.88
+    },
+    "branches": {
+      "total": 14,
+      "covered": 13,
+      "skipped": 0,
+      "pct": 92.85
+    }
+  },
+  "/workspace/taskly/agent/src/llm.ts": {
+    "lines": {
+      "total": 12,
+      "covered": 12,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 15,
+      "covered": 15,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 13,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 84.61
+    }
+  },
+  "/workspace/taskly/agent/src/report.ts": {
+    "lines": {
+      "total": 5,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 40
+    },
+    "functions": {
+      "total": 5,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 40
+    },
+    "statements": {
+      "total": 6,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 50
+    },
+    "branches": {
+      "total": 10,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 80
+    }
+  },
+  "/workspace/taskly/agent/src/runner.ts": {
+    "lines": {
+      "total": 22,
+      "covered": 22,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 7,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 27,
+      "covered": 27,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 6,
+      "covered": 6,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "/workspace/taskly/agent/src/safety.ts": {
+    "lines": {
+      "total": 46,
+      "covered": 46,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 13,
+      "covered": 13,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 64,
+      "covered": 59,
+      "skipped": 0,
+      "pct": 92.18
+    },
+    "branches": {
+      "total": 57,
+      "covered": 50,
+      "skipped": 0,
+      "pct": 87.71
+    }
+  },
+  "/workspace/taskly/agent/src/skills.ts": {
+    "lines": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 1,
+      "covered": 1,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  }
+}

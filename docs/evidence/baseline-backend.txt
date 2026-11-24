@@ -1,0 +1,38 @@
+
+> taskly-app-node-backend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /workspace/taskly/backend
+      Coverage enabled with v8
+
+
+ Test Files  4 passed (4)
+      Tests  48 passed (48)
+   Start at  20:58:50
+   Duration  1.30s (transform 344ms, setup 0ms, import 1.76s, tests 243ms, environment 1ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   30.23 |    33.33 |   40.62 |   33.02 |                   
+ src               |       0 |        0 |       0 |       0 |                   
+  factory.ts       |       0 |        0 |       0 |       0 | 10-27             
+  main.ts          |       0 |      100 |       0 |       0 | 3-5               
+ src/api           |       0 |      100 |       0 |       0 |                   
+  health.ts        |       0 |      100 |       0 |       0 | 5-10              
+ src/core          |    4.65 |        0 |   11.11 |    5.55 |                   
+  config.ts        |       0 |        0 |       0 |       0 | 4-19              
+  database.ts      |   66.66 |      100 |      50 |   66.66 | 12                
+  lifespan.ts      |       0 |        0 |       0 |       0 | 8-31              
+ ...features/todos |   66.07 |    61.53 |      75 |   70.83 |                   
+  router.ts        |   40.62 |    16.66 |   42.85 |      44 | ...22,25-29,32-33 
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 30.23% ( 39/129 )
+Branches     : 33.33% ( 16/48 )
+Functions    : 40.62% ( 13/32 )
+Lines        : 33.02% ( 36/109 )
+================================================================================
