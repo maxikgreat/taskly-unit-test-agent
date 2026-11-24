@@ -1,0 +1,2 @@
+# Repair generated tests
+Read the failure, original source and proposed test. Check whether the failure comes from a bad expectation, fixture, timing, environment or a real application issue. Modify only proposed agent-owned tests. Preserve assertions; do not skip, use only, suppress errors or change production code/configuration. Run validation after every revision. Stop within the run's existing iteration/token budgets; report unresolved failures honestly.

@@ -1,0 +1,2 @@
+# Generate backend unit tests
+Use Vitest, Supertest and existing fixtures. Mock Prisma IO, never require a database. Assert HTTP status/body plus important no-side-effect behavior for validation failures. Cover missing records, invalid IDs, database rejection and intentional defaults. Do not replace production modules to make tests pass. Use write_test with complete backend/tests/**/*.agent.test.ts content.

@@ -1,0 +1,2 @@
+# Generate frontend unit tests
+Use Vitest and React Testing Library, matching nearby conventions. Test observable interactions, loading/error states, aborted requests and cache consistency. Mock external HTTP at the boundary; use real QueryClient for hook behavior when practical. Avoid broad component mocks when testing integration. Await asynchronous interactions, clean up timers and spies. Use write_test with complete frontend/src/**/*.agent.test.ts(x) content. Read fixture/setup files before writing tests.

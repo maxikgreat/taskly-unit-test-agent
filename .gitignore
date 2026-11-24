@@ -21,3 +21,6 @@ coverage/
 
 # macOS
 .DS_Store
+
+# Agent output
+.agent-output/

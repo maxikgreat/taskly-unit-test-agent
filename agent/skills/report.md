@@ -1,0 +1,2 @@
+# Report an evidence-based decision
+Invoke finish with tests-required or no-test-changes, a short public rationale, and limitations. Summarize changed behavior and why the inspected evidence supports the decision. Do not include chain-of-thought or reasoning_content. The harness owns skills/files/usage/validation fields; do not claim results beyond tool observations. Explicitly say when CI validation is pending, coverage is unavailable, or existing protected tests require manual updates.

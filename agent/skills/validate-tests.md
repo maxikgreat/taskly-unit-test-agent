@@ -1,0 +1,2 @@
+# Execute and validate
+Invoke run_tests after staging the proposal. A local Docker runner executes both suites with no network, host credentials or writable host source. CI generation returns deferred and a separate unprivileged job validates baseline and proposed suites and typechecks. Deferred means not executed, never passed. Invoke repair-tests if execution fails. Never fabricate a test count or coverage delta from a command that did not execute.

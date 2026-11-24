@@ -1,0 +1,2 @@
+# Identify coverage gaps
+Use list_files, read_file and read_coverage for each relevant suite. Coverage may be unavailable; report that explicitly. Compare behavior against existing assertions. Prioritize user-visible failures, boundary values, asynchronous state, data preservation and error handling. Avoid duplicate tests or assertions about implementation details. A no-test-change decision needs a concrete explanation (for example prose-only changes or behavior already covered).
