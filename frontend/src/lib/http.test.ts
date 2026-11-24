@@ -49,16 +49,12 @@ it('shows actionable validation errors rather than raw server details', async ()
 })
 
 it('preserves a useful API error message', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi
-      .fn()
-      .mockResolvedValue(
-        new Response(JSON.stringify({ detail: 'Task not found.' }), {
-          status: 404,
-        }),
-      ),
+  const fetch = vi.fn().mockResolvedValue(
+    new Response(JSON.stringify({ detail: 'Task not found.' }), {
+      status: 404,
+    }),
   )
+  vi.stubGlobal('fetch', fetch)
   await expect(request('/todos/1')).rejects.toThrow('Task not found.')
 })
 
