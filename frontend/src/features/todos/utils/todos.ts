@@ -28,10 +28,12 @@ export function selectTodos(
   filter: Filter,
   query: string,
   sort: Sort,
+  priority: 'all' | Todo['priority'] = 'all',
 ): Todo[] {
   const search = query.trim().toLocaleLowerCase('en')
   return todos
     .filter((todo) => {
+      if (priority !== 'all' && todo.priority !== priority) return false
       const statusMatches =
         filter === 'all' ||
         (filter === 'completed' ? todo.completed : !todo.completed)

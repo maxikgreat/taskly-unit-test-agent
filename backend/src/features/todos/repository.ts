@@ -4,8 +4,11 @@ import type { Database, TodoStore, TodoCreate, TodoUpdate, Todo } from './types.
 export class TodoRepository implements TodoStore {
   constructor(private readonly database: Pick<Database, 'todo'>) {}
 
-  async list(): Promise<Todo[]> {
-    const rows = await this.database.todo.findMany({ orderBy: [{ created_at: 'desc' }, { id: 'desc' }] });
+  async list(priority?: Todo['priority']): Promise<Todo[]> {
+    const rows = await this.database.todo.findMany({
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+      ...(priority ? { where: { priority } } : {}),
+    });
     return rows.map(fromModel);
   }
 

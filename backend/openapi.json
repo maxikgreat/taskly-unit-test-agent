@@ -47,8 +47,27 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Invalid priority filter"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "description": "Return tasks of one priority; omit to return every priority.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          }
+        ]
       },
       "post": {
         "requestBody": {
