@@ -1,5 +1,8 @@
 # Taskly App Node
 
+The custom DeepSeek unit test agent, PR workflow, coverage evidence and security
+model are documented in [SOLUTION.md](SOLUTION.md).
+
 ## Setup
 
 ```sh

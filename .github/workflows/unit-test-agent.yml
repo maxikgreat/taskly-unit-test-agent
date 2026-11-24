@@ -1,0 +1,179 @@
+name: Unit Test Agent
+on:
+  workflow_run:
+    workflows: [PR checks]
+    types: [completed]
+permissions: {}
+concurrency:
+  group: agent-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+jobs:
+  context:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      eligible: ${{ steps.pr.outputs.eligible }}
+      number: ${{ steps.pr.outputs.number }}
+      head: ${{ steps.pr.outputs.head }}
+      base: ${{ steps.pr.outputs.base }}
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        id: pr
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({ ...context.repo, commit_sha: run.head_sha });
+            const pr = prs.find(p => p.state === 'open' && p.head.sha === run.head_sha && p.head.repo?.full_name === `${context.repo.owner}/${context.repo.repo}`);
+            if (!pr) { core.notice('Forked, stale, or closed PR: no secret-bearing agent run. Standard tests still run.'); return; }
+            const { data: current } = await github.rest.pulls.get({ ...context.repo, pull_number: pr.number });
+            core.setOutput('eligible', 'true');
+            core.setOutput('number', String(pr.number));
+            core.setOutput('head', current.head.sha);
+            core.setOutput('base', current.base.sha);
+  generate:
+    needs: context
+    if: needs.context.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Configure this environment with reviewers and a DEEPSEEK_API_KEY secret.
+    environment: test-agent
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      # workflow_run executes this workflow from the default branch. Never run
+      # agent code/package scripts from the PR in this secret-bearing job.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ needs.context.outputs.head }}
+          fetch-depth: 0
+          path: source
+          persist-credentials: false
+          submodules: false
+          lfs: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+        working-directory: trusted/agent
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: coverage-frontend
+          path: source/frontend/coverage
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: coverage-backend
+          path: source/backend/coverage
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Analyze and stage proposals (never execute PR code)
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: ${{ vars.DEEPSEEK_MODEL || 'deepseek-v4-pro' }}
+          AGENT_MAX_ITERATIONS: '24'
+          AGENT_MAX_TOTAL_TOKENS: '160000'
+          BASE_SHA: ${{ needs.context.outputs.base }}
+          HEAD_SHA: ${{ needs.context.outputs.head }}
+        run: npm start -- --root ../../source --base "$BASE_SHA" --head "$HEAD_SHA" --out ../../proposal
+        working-directory: trusted/agent
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: agent-proposal
+          path: proposal/
+          retention-days: 7
+  validate:
+    needs: [context, generate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      outcome: ${{ steps.validation.outcome }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ needs.context.outputs.head }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: agent-proposal
+          path: proposal
+      - run: npm ci --ignore-scripts
+        working-directory: trusted/agent
+      - name: Validate baseline, apply path policy, validate tests and export patch
+        id: validation
+        run: node trusted/agent/scripts/validate.mjs source proposal validation
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: validated-tests
+          path: validation/
+          retention-days: 7
+  report:
+    needs: [context, generate, validate]
+    if: always() && needs.context.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      actions: read
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        if: needs.generate.result != 'skipped'
+        continue-on-error: true
+        with:
+          name: agent-proposal
+          path: proposal
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        if: needs.validate.result != 'skipped'
+        continue-on-error: true
+        with:
+          name: validated-tests
+          path: validation
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        env:
+          PR_NUMBER: ${{ needs.context.outputs.number }}
+          REVIEWED_HEAD: ${{ needs.context.outputs.head }}
+          GENERATION_RESULT: ${{ needs.generate.result }}
+          VALIDATION_RESULT: ${{ needs.validate.result }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const number = Number(process.env.PR_NUMBER);
+            const { data: pr } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
+            if (pr.head.sha !== process.env.REVIEWED_HEAD) { core.notice('PR changed: suppressing stale report.'); return; }
+            const safeRead = (p, max) => {
+              if (!fs.existsSync(p)) return '';
+              if (fs.statSync(p).size > max) throw new Error('Oversized report');
+              return fs.readFileSync(p, 'utf8').replace(/@/g, '＠').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            };
+            const marker = '<!-- taskly-unit-test-agent -->';
+            const link = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `${marker}\n${safeRead('proposal/report.md', 16000)}\n\nGeneration job: **${process.env.GENERATION_RESULT}**. Validation job: **${process.env.VALIDATION_RESULT}**.\n\n${safeRead('validation/summary.md', 12000)}\n\n[Run, logs, proposal and test patch artifacts](${link})\nReviewed commit: ${process.env.REVIEWED_HEAD}\n\nAutomated tests require human review before applying.`;
+            const comments = await github.paginate(github.rest.issues.listComments, { ...context.repo, issue_number: number, per_page: 100 });
+            const existing = comments.find(c => c.user?.login === 'github-actions[bot]' && c.body?.startsWith(marker));
+            if (existing) await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            else await github.rest.issues.createComment({ ...context.repo, issue_number: number, body });
