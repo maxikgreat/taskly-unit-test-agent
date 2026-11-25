@@ -1,0 +1,22 @@
+{
+  "status": "failed",
+  "summary": "Total token budget reached",
+  "limitations": [
+    "Proposal is not approved; inspect failures and rerun validation."
+  ],
+  "skills": [
+    "analyze-pr",
+    "identify-gaps",
+    "backend-tests",
+    "frontend-tests"
+  ],
+  "files": [],
+  "validation": [],
+  "usage": {
+    "requests": 7,
+    "promptTokens": 74743,
+    "completionTokens": 5537,
+    "totalTokens": 80280,
+    "cacheHitTokens": 54656
+  }
+}

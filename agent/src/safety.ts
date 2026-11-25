@@ -2,14 +2,14 @@ import { lstat, readdir, readFile, realpath, mkdir, writeFile } from 'node:fs/pr
 import path from 'node:path';
 import { z } from 'zod';
 
+export const testFilePathSchema = z.string().max(240).regex(/^(?:backend\/tests\/[\w/-]+\.agent\.test\.ts|frontend\/src\/[\w/-]+\.agent\.test\.tsx?)$/);
 export const proposalSchema = z.object({
-  files: z.array(z.object({ path: z.string().max(240), content: z.string().min(1).max(30000) }).strict()).max(10),
+  files: z.array(z.object({ path: testFilePathSchema, content: z.string().min(1).max(30000) }).strict()).max(10),
 }).strict();
 export type Proposal = z.infer<typeof proposalSchema>;
 
 export function testPath(file: string): boolean {
-  return validRelative(file) && (/^backend\/tests\/[\w/-]+\.agent\.test\.ts$/.test(file)
-    || /^frontend\/src\/[\w/-]+\.agent\.test\.tsx?$/.test(file));
+  return validRelative(file) && testFilePathSchema.safeParse(file).success;
 }
 
 function validRelative(file: string): boolean {

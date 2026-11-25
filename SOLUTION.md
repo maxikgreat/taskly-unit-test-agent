@@ -168,9 +168,21 @@ are mocked. Docker process behavior is mocked in unit tests as well.
 | `AGENT_API_TIMEOUT_MS` | `90000` | Timeout per API attempt |
 | `AGENT_TEST_TIMEOUT_MS` | `120000` | Local sandbox execution timeout |
 
-The context guard uses UTF-8 bytes as a conservative token upper bound and
-reserves output before making another request. It fails instead of truncating
-reasoning. Up to eight tools can be called in one model response. Tests run at
+CI defaults to a cumulative budget of **240000** tokens for reviews involving both
+suites. Repository variables `AGENT_MAX_TOTAL_TOKENS`, `AGENT_MAX_OUTPUT_TOKENS`,
+`AGENT_MAX_ITERATIONS` and `AGENT_MAX_CONTEXT_BYTES` override the workflow limits;
+the same numeric validation and hard ceilings apply. The local default remains
+160000 unless overridden. Live feature analysis demonstrated that 160000 can be
+too small for reading both suites, writing tests and completing validation/report
+tool calls. Per-turn reports include rejected-tool reasons for diagnosis without
+serializing prompts, arguments or private reasoning.
+
+The context guard bounds the first request by UTF-8 bytes. Later requests reuse
+the API's measured prompt-token count, adding an upper bound for newly appended
+JSON bytes and 1024 tokens for message framing. Input and output are reserved
+before each request; retained reasoning is never truncated. The report records
+per-turn tool names and token counts without tool arguments or reasoning content.
+Up to eight tools can be called in one model response. Tests run at
 most three times. The SDK has automatic retries disabled; the adapter retries
 429/5xx once with a delay. Authentication and validation failures are not retried.
 The report contains logical requests, input/output/total tokens and cache hits.
@@ -196,7 +208,7 @@ improvements and demo execution are recorded separately when credentials permit.
 
 See `docs/evidence/baseline-*.{json,txt}` and `after-*.{json,txt}`. Log paths are
 normalized for portability; coverage numbers are unchanged. Both application
-typechecks and production builds passed locally. The 39 deterministic agent tests pass. Agent test evidence is in
+typechecks and production builds passed locally. The agent tests are deterministic and mock all LLM responses. Agent test evidence is in
 `docs/evidence/agent-tests.txt`. The initial main-branch [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45477775540) passed. The actual Docker sandbox also passed both application typechecks and all 98 application tests; see `docs/evidence/sandbox-smoke.txt`.
 
 ## GitHub Actions
@@ -290,15 +302,24 @@ passed for all three suites. The
 failed at the missing-key guard, skipped generated-test validation, and
 [posted its actual failure report](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1#issuecomment-7143251846)
 with zero API requests. Context checks, coverage-artifact downloads and the
-separate reporting job completed successfully. No live no-test-change PR was
-run; that decision path is demonstrated in mocked orchestration tests.
+separate reporting job completed successfully.
 
-No live DeepSeek calls were made: the API key was unavailable and live execution
-was explicitly deferred. This means autonomous generation, live API reasoning
-retention and a completed agent PR report have not yet been verified against a
-real model. The mocked SDK and orchestration tests do not substitute for that
-evidence. Missing-key executions export a clear failure report with zero API
-requests; the workflow never claims successful generation.
+On 25 November, [documentation-only PR #2](https://github.com/maxikgreat/taskly-unit-test-agent/pull/2)
+completed a [successful live run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45590186017):
+the agent chose `no-test-changes`, proposed zero files, and both application suites
+and typechecks passed in separate validation with unchanged coverage. It used
+21,769 API tokens over seven requests. Persistent evidence is in
+`docs/evidence/live-docs/`.
+
+At initial delivery on 24 November, live execution was deferred because the API
+key was unavailable. On 25 November, the first authenticated run completed seven
+DeepSeek requests (80,280 total tokens) and invoked analysis, frontend and backend
+skills before a conservative token estimate stopped it prematurely. That failure
+is recorded in `docs/evidence/live-initial-budget-failure.json`. The estimator now
+uses measured prompt usage for retained context; regression tests verify both
+continued execution with available budget and refusal when budget is insufficient.
+Successful live test generation and validation are recorded separately once run.
+Missing-key executions still export a failure report with zero API requests.
 
 Add the secret using GitHub Settings → Environments → test-agent, or run the
 following interactive command (do not place the secret in a command argument):
@@ -307,7 +328,7 @@ following interactive command (do not place the secret in a command argument):
 gh secret set DEEPSEEK_API_KEY --repo maxikgreat/taskly-unit-test-agent --env test-agent
 ```
 
-Then rerun the failed `Unit Test Agent` workflow for the demo PR. Download and
+Then rerun the latest failed `Unit Test Agent` workflow for the demo PR’s current head. Older runs safely skip stale commits. Download and
 review the proposed tests and `tests.patch`, inspect actual validation and coverage,
 and apply the patch only after reviewing it. GitHub reporting uses the built-in
 Actions token; no additional AI subscription is needed.

@@ -1,0 +1,155 @@
+{
+  "status": "failed",
+  "summary": "Total token budget reached",
+  "limitations": [
+    "Proposal is not approved; inspect failures and rerun validation."
+  ],
+  "skills": [
+    "analyze-pr",
+    "identify-gaps",
+    "backend-tests",
+    "frontend-tests"
+  ],
+  "files": [
+    "backend/tests/todos-priority.agent.test.ts",
+    "frontend/src/features/todos/utils/selectTodosPriority.agent.test.ts"
+  ],
+  "validation": [],
+  "turns": [
+    {
+      "turn": 1,
+      "contextBytes": 5650,
+      "inputTokenUpperBound": 5650,
+      "promptTokens": 1526,
+      "completionTokens": 76,
+      "tools": [
+        "analyze_diff",
+        "invoke_skill"
+      ]
+    },
+    {
+      "turn": 2,
+      "contextBytes": 6781,
+      "inputTokenUpperBound": 3681,
+      "promptTokens": 1729,
+      "completionTokens": 29,
+      "tools": [
+        "analyze_diff"
+      ]
+    },
+    {
+      "turn": 3,
+      "contextBytes": 15750,
+      "inputTokenUpperBound": 11722,
+      "promptTokens": 4324,
+      "completionTokens": 427,
+      "tools": [
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file"
+      ]
+    },
+    {
+      "turn": 4,
+      "contextBytes": 28485,
+      "inputTokenUpperBound": 18083,
+      "promptTokens": 7790,
+      "completionTokens": 91,
+      "tools": [
+        "invoke_skill",
+        "list_files"
+      ]
+    },
+    {
+      "turn": 5,
+      "contextBytes": 37227,
+      "inputTokenUpperBound": 17556,
+      "promptTokens": 9814,
+      "completionTokens": 217,
+      "tools": [
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file"
+      ]
+    },
+    {
+      "turn": 6,
+      "contextBytes": 49910,
+      "inputTokenUpperBound": 23521,
+      "promptTokens": 13436,
+      "completionTokens": 170,
+      "tools": [
+        "read_file",
+        "read_file",
+        "read_file"
+      ]
+    },
+    {
+      "turn": 7,
+      "contextBytes": 55724,
+      "inputTokenUpperBound": 20274,
+      "promptTokens": 14913,
+      "completionTokens": 867,
+      "tools": [
+        "invoke_skill",
+        "invoke_skill"
+      ]
+    },
+    {
+      "turn": 8,
+      "contextBytes": 60832,
+      "inputTokenUpperBound": 21045,
+      "promptTokens": 16005,
+      "completionTokens": 123,
+      "tools": [
+        "read_file",
+        "read_file"
+      ]
+    },
+    {
+      "turn": 9,
+      "contextBytes": 69870,
+      "inputTokenUpperBound": 26067,
+      "promptTokens": 18482,
+      "completionTokens": 2784,
+      "tools": [
+        "write_test",
+        "write_test",
+        "write_test",
+        "write_test"
+      ]
+    },
+    {
+      "turn": 10,
+      "contextBytes": 81873,
+      "inputTokenUpperBound": 31509,
+      "promptTokens": 21358,
+      "completionTokens": 640,
+      "tools": [
+        "write_test"
+      ]
+    },
+    {
+      "turn": 11,
+      "contextBytes": 84510,
+      "inputTokenUpperBound": 25019,
+      "promptTokens": 22022,
+      "completionTokens": 1354,
+      "tools": [
+        "write_test"
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 11,
+    "promptTokens": 131399,
+    "completionTokens": 6778,
+    "totalTokens": 138177,
+    "cacheHitTokens": 114304
+  }
+}
