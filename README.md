@@ -114,6 +114,9 @@ Schema migrations are managed separately; generating the client does not update 
 
 ### Tests and coverage
 
+Unit tests mock Prisma database I/O and do not require a running PostgreSQL
+instance. PostgreSQL is required when running the application itself.
+
 Type check:
 
 ```sh
