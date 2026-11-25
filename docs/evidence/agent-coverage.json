@@ -1,28 +1,28 @@
 {
   "total": {
     "lines": {
-      "total": 199,
-      "covered": 180,
+      "total": 206,
+      "covered": 187,
       "skipped": 0,
-      "pct": 90.45
+      "pct": 90.77
     },
     "statements": {
-      "total": 263,
-      "covered": 222,
+      "total": 271,
+      "covered": 230,
       "skipped": 0,
-      "pct": 84.41
+      "pct": 84.87
     },
     "functions": {
-      "total": 42,
-      "covered": 38,
+      "total": 43,
+      "covered": 39,
       "skipped": 0,
-      "pct": 90.47
+      "pct": 90.69
     },
     "branches": {
-      "total": 202,
-      "covered": 156,
+      "total": 211,
+      "covered": 166,
       "skipped": 0,
-      "pct": 77.22
+      "pct": 78.67
     },
     "branchesTrue": {
       "total": 0,
@@ -33,28 +33,28 @@
   },
   "/workspace/taskly/agent/src/agent.ts": {
     "lines": {
-      "total": 105,
-      "covered": 89,
+      "total": 111,
+      "covered": 95,
       "skipped": 0,
-      "pct": 84.76
+      "pct": 85.58
     },
     "functions": {
-      "total": 11,
-      "covered": 10,
+      "total": 12,
+      "covered": 11,
       "skipped": 0,
-      "pct": 90.9
+      "pct": 91.66
     },
     "statements": {
-      "total": 140,
-      "covered": 108,
+      "total": 147,
+      "covered": 115,
       "skipped": 0,
-      "pct": 77.14
+      "pct": 78.23
     },
     "branches": {
-      "total": 102,
-      "covered": 68,
+      "total": 112,
+      "covered": 79,
       "skipped": 0,
-      "pct": 66.66
+      "pct": 70.53
     }
   },
   "/workspace/taskly/agent/src/config.ts": {
@@ -163,8 +163,8 @@
   },
   "/workspace/taskly/agent/src/safety.ts": {
     "lines": {
-      "total": 46,
-      "covered": 46,
+      "total": 47,
+      "covered": 47,
       "skipped": 0,
       "pct": 100
     },
@@ -175,16 +175,16 @@
       "pct": 100
     },
     "statements": {
-      "total": 64,
-      "covered": 59,
+      "total": 65,
+      "covered": 60,
       "skipped": 0,
-      "pct": 92.18
+      "pct": 92.3
     },
     "branches": {
-      "total": 57,
-      "covered": 50,
+      "total": 56,
+      "covered": 49,
       "skipped": 0,
-      "pct": 87.71
+      "pct": 87.5
     }
   },
   "/workspace/taskly/agent/src/skills.ts": {

@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-25",
+  "provider": "DeepSeek",
+  "requestedModel": "deepseek-v4-pro",
+  "mockedLlm": false,
+  "feature": {
+    "pullRequest": "https://github.com/maxikgreat/taskly-unit-test-agent/pull/1",
+    "workflow": "https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45591166335",
+    "reviewedHead": "dea4f519b1d1dd314e3e293c45c739934dbb9582",
+    "validation": "passed",
+    "generatedFiles": 4,
+    "newTests": 15,
+    "frontendTests": 38,
+    "backendTests": 75
+  },
+  "documentationOnly": {
+    "pullRequest": "https://github.com/maxikgreat/taskly-unit-test-agent/pull/2",
+    "workflow": "https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45590186017",
+    "decision": "no-test-changes",
+    "validation": "passed",
+    "generatedFiles": 0
+  },
+  "aggregateReportedUsageIncludingFailedLiveAttempts": {
+    "requests": 35,
+    "promptTokens": 405181,
+    "completionTokens": 23332,
+    "totalTokens": 428513,
+    "cacheHitTokens": 345088
+  },
+  "reports": [
+    "docs/evidence/live-initial-budget-failure.json",
+    "docs/evidence/live-budget-limit.json",
+    "docs/evidence/live-docs/report.json",
+    "docs/evidence/live-feature/report.json"
+  ],
+  "limitations": [
+    "Unknown charges from attempts without a returned usage object are not included.",
+    "Generated tests remain a reviewable patch; feature branches were not automatically modified."
+  ]
+}

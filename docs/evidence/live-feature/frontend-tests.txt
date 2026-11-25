@@ -1,0 +1,72 @@
+
+> taskly-app-node-frontend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /home/runner/work/taskly-unit-test-agent/taskly-unit-test-agent/source/frontend
+      Coverage enabled with v8
+
+ ✓ src/features/todos/components/TodoEditor.test.tsx (1 test) 105ms
+ ✓ src/features/todos/components/TodoFilters.test.tsx (1 test) 167ms
+ ✓ src/features/todos/components/TodoForm.test.tsx (2 tests) 320ms
+ ✓ src/features/todos/utils/todos.agent.test.ts (2 tests) 13ms
+ ✓ src/features/todos/components/TodoList.test.tsx (1 test) 73ms
+ ✓ src/features/todos/components/TodoItem.test.tsx (1 test) 124ms
+ ✓ src/features/todos/hooks/useTodoFilters.agent.test.tsx (1 test) 27ms
+ ✓ src/features/todos/components/DeleteTodoDialog.test.tsx (1 test) 111ms
+ ✓ src/features/todos/components/TodosHeader.test.tsx (1 test) 109ms
+ ✓ src/App.test.tsx (1 test) 92ms
+ ✓ src/components/ApplicationHeader.test.tsx (1 test) 73ms
+ ✓ src/features/todos/TodosPage.test.tsx (1 test) 122ms
+ ✓ src/components/SuccessNotice.test.tsx (2 tests) 56ms
+ ✓ src/features/todos/hooks/mutations.test.tsx (7 tests) 31ms
+ ✓ src/hooks/useNotice.test.ts (1 test) 18ms
+ ✓ src/features/todos/api/todos.test.ts (2 tests) 6ms
+ ✓ src/lib/http.test.ts (9 tests) 15ms
+ ✓ src/features/todos/components/TodoFilters.agent.test.tsx (1 test) 94ms
+ ✓ src/features/todos/utils/todos.test.ts (2 tests) 3ms
+
+ Test Files  19 passed (19)
+      Tests  38 passed (38)
+   Start at  10:06:14
+   Duration  5.95s (transform 669ms, setup 3.54s, import 1.71s, tests 1.56s, environment 6.55s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   70.34 |    58.04 |    64.1 |   70.77 |                   
+ src               |     100 |      100 |     100 |     100 |                   
+  App.tsx          |     100 |      100 |     100 |     100 |                   
+ src/app           |       0 |        0 |       0 |       0 |                   
+  AppProviders.tsx |       0 |        0 |       0 |       0 | 14                
+ src/components    |     100 |      100 |     100 |     100 |                   
+  ...ionHeader.tsx |     100 |      100 |     100 |     100 |                   
+  ...essNotice.tsx |     100 |      100 |     100 |     100 |                   
+ ...features/todos |   48.14 |    61.11 |   27.27 |      50 |                   
+  TodosPage.tsx    |   48.14 |    61.11 |   27.27 |      50 | 28-34,53,83-108   
+ ...ures/todos/api |   57.14 |      100 |      50 |   57.14 |                   
+  todos.ts         |   57.14 |      100 |      50 |   57.14 | 21-33             
+ ...dos/components |   70.58 |    51.56 |   66.66 |   72.34 |                   
+  ...odoDialog.tsx |   33.33 |     62.5 |   33.33 |    37.5 | 19-22,40          
+  TodoEditor.tsx   |   83.33 |     62.5 |     100 |      90 | 27                
+  ...mptyState.tsx |       0 |        0 |       0 |       0 | 13                
+  TodoFilters.tsx  |     100 |      100 |     100 |     100 |                   
+  TodoForm.tsx     |   88.23 |    63.63 |   77.77 |    87.5 | 67,91             
+  TodoItem.tsx     |     100 |    35.71 |     100 |     100 | 32-64             
+  TodoList.tsx     |      20 |     62.5 |      20 |      20 | 43-49             
+  TodosHeader.tsx  |     100 |      100 |     100 |     100 |                   
+ ...es/todos/hooks |   89.65 |      100 |   84.21 |   88.46 |                   
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+  ...odoFilters.ts |     100 |      100 |     100 |     100 |                   
+  useTodosBusy.ts  |       0 |      100 |       0 |       0 | 5                 
+  useTodosQuery.ts |       0 |      100 |       0 |       0 | 6-8               
+  ...doMutation.ts |     100 |      100 |     100 |     100 |                   
+ ...es/todos/utils |   65.51 |    51.21 |   66.66 |   61.53 |                   
+  todos.ts         |   65.51 |    51.21 |   66.66 |   61.53 | ...14-20,53,62-68 
+ src/hooks         |   54.54 |       75 |      40 |   71.42 |                   
+  useNotice.ts     |   54.54 |       75 |      40 |   71.42 | 8-9               
+ src/lib           |     100 |      100 |     100 |     100 |                   
+  http.ts          |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------

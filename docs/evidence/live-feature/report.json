@@ -1,0 +1,170 @@
+{
+  "status": "deferred",
+  "summary": "The PR adds priority filtering across the todos stack. Backend: `TodoStore.list(priority?)`, `TodoRepository.list` adds a `where: { priority }` clause, `GET /api/todos` validates an optional `priority` query via new `priorityFilterSchema` (422 on invalid). Frontend: `selectTodos` gains a priority filter argument, `useTodoFilters` tracks priority state, and `TodoFilters` exposes a \"Filter by priority\" select. Existing tests (router, repository, validators, selectTodos, TodoFilters) did not exercise the new priority behavior; coverage showed `useTodoFilters.ts` at 0% and the new branches uncovered.\n\nI staged four agent-owned unit tests: (1) backend router/repository/validator coverage for priority forwarding, 422 on invalid values, and the `where` clause presence/absence; (2) `selectTodos` priority filtering; (3) `useTodoFilters` priority state and visible-todo narrowing; and (4) `TodoFilters` priority select forwarding and default. No existing non-agent tests were modified.",
+  "limitations": [
+    "run_tests returned deferred: validation awaits the separate CI runner and has not executed locally.",
+    "No coverage delta can be claimed for the proposed tests until CI validation completes.",
+    "The existing protected TodosPage.test.tsx was updated by the PR itself; no further edits to non-agent tests were made."
+  ],
+  "skills": [
+    "analyze-pr",
+    "identify-gaps",
+    "backend-tests",
+    "frontend-tests",
+    "validate-tests",
+    "report"
+  ],
+  "files": [
+    "backend/tests/todos-priority.agent.test.ts",
+    "frontend/src/features/todos/utils/todos.agent.test.ts",
+    "frontend/src/features/todos/hooks/useTodoFilters.agent.test.tsx",
+    "frontend/src/features/todos/components/TodoFilters.agent.test.tsx"
+  ],
+  "validation": [
+    {
+      "status": "deferred",
+      "summary": "Tests have NOT executed. Separate secret-free CI validation must run baseline and proposed suites."
+    }
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "contextBytes": 5977,
+      "inputTokenUpperBound": 5977,
+      "promptTokens": 1619,
+      "completionTokens": 77,
+      "tools": [
+        "invoke_skill",
+        "analyze_diff"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 2,
+      "contextBytes": 15759,
+      "inputTokenUpperBound": 12425,
+      "promptTokens": 4368,
+      "completionTokens": 395,
+      "tools": [
+        "invoke_skill",
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file",
+        "list_files"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 3,
+      "contextBytes": 31050,
+      "inputTokenUpperBound": 20683,
+      "promptTokens": 8151,
+      "completionTokens": 320,
+      "tools": [
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 4,
+      "contextBytes": 44136,
+      "inputTokenUpperBound": 22261,
+      "promptTokens": 11876,
+      "completionTokens": 965,
+      "tools": [
+        "read_coverage",
+        "read_coverage",
+        "read_file",
+        "read_file"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 5,
+      "contextBytes": 65763,
+      "inputTokenUpperBound": 34527,
+      "promptTokens": 18091,
+      "completionTokens": 1240,
+      "tools": [
+        "read_file",
+        "read_file",
+        "read_file",
+        "read_file"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 6,
+      "contextBytes": 80379,
+      "inputTokenUpperBound": 33731,
+      "promptTokens": 21896,
+      "completionTokens": 1557,
+      "tools": [
+        "invoke_skill",
+        "invoke_skill"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 7,
+      "contextBytes": 88783,
+      "inputTokenUpperBound": 31324,
+      "promptTokens": 23813,
+      "completionTokens": 5215,
+      "tools": [
+        "write_test",
+        "write_test",
+        "write_test",
+        "write_test"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 8,
+      "contextBytes": 109339,
+      "inputTokenUpperBound": 45393,
+      "promptTokens": 29159,
+      "completionTokens": 63,
+      "tools": [
+        "invoke_skill",
+        "run_tests"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 9,
+      "contextBytes": 110520,
+      "inputTokenUpperBound": 31364,
+      "promptTokens": 29373,
+      "completionTokens": 129,
+      "tools": [
+        "invoke_skill"
+      ],
+      "toolErrors": []
+    },
+    {
+      "turn": 10,
+      "contextBytes": 111759,
+      "inputTokenUpperBound": 31636,
+      "promptTokens": 29615,
+      "completionTokens": 365,
+      "tools": [
+        "finish"
+      ],
+      "toolErrors": []
+    }
+  ],
+  "usage": {
+    "requests": 10,
+    "promptTokens": 177961,
+    "completionTokens": 10326,
+    "totalTokens": 188287,
+    "cacheHitTokens": 157952
+  },
+  "decision": "tests-required"
+}

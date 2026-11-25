@@ -1,0 +1,203 @@
+diff --git a/backend/tests/todos-priority.agent.test.ts b/backend/tests/todos-priority.agent.test.ts
+new file mode 100644
+index 0000000..455be1f
+--- /dev/null
++++ b/backend/tests/todos-priority.agent.test.ts
+@@ -0,0 +1,80 @@
++import express from 'express';
++import request from 'supertest';
++import { afterEach, describe, it, expect, vi } from 'vitest';
++import { createDatabase } from '../src/core/database.ts';
++import { TodoRepository } from '../src/features/todos/repository.ts';
++import { createTodosRouter } from '../src/features/todos/router.ts';
++import { priorityFilterSchema } from '../src/features/todos/validators.ts';
++import { record, todo } from './fixture.ts';
++
++afterEach(() => vi.restoreAllMocks());
++
++function setupRouter() {
++  const repository = {
++    list: vi.fn().mockResolvedValue([todo]),
++    create: vi.fn().mockResolvedValue(todo),
++    get: vi.fn(),
++    update: vi.fn(),
++    delete: vi.fn(),
++  };
++  const app = express();
++  app.use(express.json());
++  app.use('/api/todos', createTodosRouter(repository));
++  return { app, repository };
++}
++
++describe('todo priority filtering', () => {
++  it('forwards a valid priority query to the repository', async () => {
++    const { app, repository } = setupRouter();
++    const response = await request(app).get('/api/todos').query({ priority: 'high' });
++    expect(response.status).toBe(200);
++    expect(response.body).toEqual([todo]);
++    expect(repository.list).toHaveBeenCalledWith('high');
++  });
++
++  it('lists without a filter when priority is absent', async () => {
++    const { app, repository } = setupRouter();
++    const response = await request(app).get('/api/todos');
++    expect(response.status).toBe(200);
++    expect(repository.list).toHaveBeenCalledWith(undefined);
++  });
++
++  it.each(['urgent', ''])('rejects an invalid priority without querying the repository: %j', async (priority) => {
++    const { app, repository } = setupRouter();
++    const response = await request(app).get('/api/todos').query({ priority });
++    expect(response.status).toBe(422);
++    expect(repository.list).not.toHaveBeenCalled();
++  });
++
++  it('scopes findMany by priority in the repository', async () => {
++    const database = createDatabase('postgresql://test:test@localhost:5432/test');
++    const repository = new TodoRepository(database);
++    const findMany = vi.spyOn(database.todo, 'findMany').mockResolvedValue([record]);
++    expect(await repository.list('high')).toEqual([todo]);
++    expect(findMany).toHaveBeenCalledWith({
++      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
++      where: { priority: 'high' },
++    });
++  });
++
++  it('omits the where clause when no priority is supplied', async () => {
++    const database = createDatabase('postgresql://test:test@localhost:5432/test');
++    const repository = new TodoRepository(database);
++    const findMany = vi.spyOn(database.todo, 'findMany').mockResolvedValue([record]);
++    expect(await repository.list()).toEqual([todo]);
++    expect(findMany).toHaveBeenCalledWith({
++      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
++    });
++  });
++});
++
++describe('priorityFilterSchema', () => {
++  it('accepts valid priorities and leaves absent values optional', () => {
++    expect(priorityFilterSchema.safeParse('high')).toEqual({ success: true, data: 'high' });
++    expect(priorityFilterSchema.safeParse(undefined)).toEqual({ success: true, data: undefined });
++  });
++
++  it.each(['urgent', '', 'HIGH', 'low,medium'])('rejects invalid priorities: %j', (value) => {
++    expect(priorityFilterSchema.safeParse(value).success).toBe(false);
++  });
++});
+diff --git a/frontend/src/features/todos/components/TodoFilters.agent.test.tsx b/frontend/src/features/todos/components/TodoFilters.agent.test.tsx
+new file mode 100644
+index 0000000..107d1ff
+--- /dev/null
++++ b/frontend/src/features/todos/components/TodoFilters.agent.test.tsx
+@@ -0,0 +1,40 @@
++import { render, screen } from '@testing-library/react'
++import userEvent from '@testing-library/user-event'
++import { expect, it, vi } from 'vitest'
++import { TodoFilters } from './TodoFilters'
++
++vi.mock('../../../design-system', () => import('../../../design-system/mocks'))
++
++it('forwards priority changes and defaults to all', async () => {
++  const user = userEvent.setup()
++  const onPriorityChange = vi.fn()
++  const { rerender } = render(
++    <TodoFilters
++      filter="all"
++      search=""
++      sort="newest"
++      onFilterChange={vi.fn()}
++      onSearchChange={vi.fn()}
++      onSortChange={vi.fn()}
++      onPriorityChange={onPriorityChange}
++    />,
++  )
++
++  expect(screen.getByLabelText('Filter by priority')).toHaveValue('all')
++  await user.selectOptions(screen.getByLabelText('Filter by priority'), 'high')
++  expect(onPriorityChange).toHaveBeenCalledWith('high')
++
++  rerender(
++    <TodoFilters
++      filter="all"
++      search=""
++      sort="newest"
++      priority="high"
++      onFilterChange={vi.fn()}
++      onSearchChange={vi.fn()}
++      onSortChange={vi.fn()}
++      onPriorityChange={onPriorityChange}
++    />,
++  )
++  expect(screen.getByLabelText('Filter by priority')).toHaveValue('high')
++})
+diff --git a/frontend/src/features/todos/hooks/useTodoFilters.agent.test.tsx b/frontend/src/features/todos/hooks/useTodoFilters.agent.test.tsx
+new file mode 100644
+index 0000000..e1984f6
+--- /dev/null
++++ b/frontend/src/features/todos/hooks/useTodoFilters.agent.test.tsx
+@@ -0,0 +1,30 @@
++import { act, renderHook } from '@testing-library/react'
++import { describe, expect, it } from 'vitest'
++import { useTodoFilters } from './useTodoFilters'
++import type { Todo } from '../types'
++
++const base: Todo = {
++  id: 1,
++  title: 'Task',
++  description: '',
++  priority: 'medium',
++  completed: false,
++  due_date: null,
++  created_at: '2026-10-01T12:00:00Z',
++  updated_at: '2026-10-01T12:00:00Z',
++}
++
++describe('useTodoFilters priority', () => {
++  it('starts on all priorities and narrows visible todos via setPriority', () => {
++    const high: Todo = { ...base, id: 2, priority: 'high' }
++    const low: Todo = { ...base, id: 3, priority: 'low' }
++    const { result } = renderHook(() => useTodoFilters([high, base, low]))
++
++    expect(result.current.priority).toBe('all')
++    expect(result.current.visible.map((todo) => todo.id).sort()).toEqual([1, 2, 3])
++
++    act(() => result.current.setPriority('high'))
++    expect(result.current.priority).toBe('high')
++    expect(result.current.visible).toEqual([high])
++  })
++})
+diff --git a/frontend/src/features/todos/utils/todos.agent.test.ts b/frontend/src/features/todos/utils/todos.agent.test.ts
+new file mode 100644
+index 0000000..de35e36
+--- /dev/null
++++ b/frontend/src/features/todos/utils/todos.agent.test.ts
+@@ -0,0 +1,29 @@
++import { describe, expect, it } from 'vitest'
++import { selectTodos } from './todos'
++import type { Todo } from '../types'
++
++const base: Todo = {
++  id: 1,
++  title: 'Sprint plan',
++  description: '',
++  priority: 'medium',
++  completed: false,
++  due_date: null,
++  created_at: '2026-10-01T12:00:00Z',
++  updated_at: '2026-10-01T12:00:00Z',
++}
++
++describe('selectTodos priority filtering', () => {
++  it('returns only todos matching the selected priority', () => {
++    const high: Todo = { ...base, id: 2, priority: 'high' }
++    const low: Todo = { ...base, id: 3, priority: 'low' }
++    expect(selectTodos([high, base, low], 'all', '', 'newest', 'high')).toEqual([high])
++  })
++
++  it("keeps every priority when 'all' is selected", () => {
++    const high: Todo = { ...base, id: 2, priority: 'high' }
++    const result = selectTodos([high, base], 'all', '', 'newest', 'all')
++    expect(result.map((todo) => todo.id).sort()).toEqual([1, 2])
++    expect(selectTodos([high, base], 'all', '', 'newest').map((todo) => todo.id).sort()).toEqual([1, 2])
++  })
++})

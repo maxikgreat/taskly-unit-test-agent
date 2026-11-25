@@ -1,0 +1,40 @@
+
+> taskly-app-node-backend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /home/runner/work/taskly-unit-test-agent/taskly-unit-test-agent/source/backend
+      Coverage enabled with v8
+
+ ✓ tests/repository.test.ts (11 tests) 27ms
+ ✓ tests/router.test.ts (6 tests) 54ms
+ ✓ tests/http-errors.test.ts (16 tests) 112ms
+ ✓ tests/validators.test.ts (27 tests) 14ms
+ ✓ tests/mappers.test.ts (4 tests) 7ms
+ ✓ tests/todos-priority.agent.test.ts (11 tests) 38ms
+
+ Test Files  6 passed (6)
+      Tests  75 passed (75)
+   Start at  10:06:22
+   Duration  900ms (transform 231ms, setup 0ms, import 1.22s, tests 251ms, environment 0ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   66.16 |    82.69 |   71.87 |   67.25 |                   
+ src               |      84 |    92.85 |      80 |      85 |                   
+  factory.ts       |   95.45 |    92.85 |     100 |     100 | 20                
+  main.ts          |       0 |      100 |       0 |       0 | 3-5               
+ src/api           |     100 |      100 |     100 |     100 |                   
+  health.ts        |     100 |      100 |     100 |     100 |                   
+ src/core          |    4.65 |        0 |   11.11 |    5.55 |                   
+  config.ts        |       0 |        0 |       0 |       0 | 4-19              
+  database.ts      |   66.66 |      100 |      50 |   66.66 | 12                
+  lifespan.ts      |       0 |        0 |       0 |       0 | 8-31              
+ ...features/todos |     100 |      100 |     100 |     100 |                   
+  mappers.ts       |     100 |      100 |     100 |     100 |                   
+  repository.ts    |     100 |      100 |     100 |     100 |                   
+  router.ts        |     100 |      100 |     100 |     100 |                   
+  validators.ts    |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------

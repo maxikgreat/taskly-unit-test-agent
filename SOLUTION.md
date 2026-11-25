@@ -47,8 +47,11 @@ effort is `low`. The SDK's narrower effort enum requires one cast at the provide
 boundary for DeepSeek's documented `max` value. A mocked HTTP test exercises the
 real SDK's request serialization and reasoning-field preservation.
 
-Documentation compatibility is verified. A live authenticated model execution
-is recorded separately when available; mock tests are not evidence of a live run.
+Live compatibility was verified on **25 November 2026**: DeepSeek completed ten
+successive tool-calling requests for the feature PR, preserving reasoning context,
+and seven requests for the documentation-only PR. Both workflows completed
+separate test validation and published reports. Mock tests remain separate from
+that live evidence.
 
 ### Repository structure
 
@@ -204,12 +207,42 @@ The new application regression tests are **engineer-authored**, not represented
 as DeepSeek-generated. They cover malformed/oversized JSON, private error
 containment, task lookup/update/delete and invalid inputs, HTTP error messages,
 request cancellation and actual React Query cache behavior. Live agent-generated
-improvements and demo execution are recorded separately when credentials permit.
+improvements are recorded separately below.
 
 See `docs/evidence/baseline-*.{json,txt}` and `after-*.{json,txt}`. Log paths are
 normalized for portability; coverage numbers are unchanged. Both application
-typechecks and production builds passed locally. The agent tests are deterministic and mock all LLM responses. Agent test evidence is in
+typechecks and production builds passed locally. All 41 agent tests pass with mocked LLM responses. Agent test evidence is in
 `docs/evidence/agent-tests.txt`. The initial main-branch [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45477775540) passed. The actual Docker sandbox also passed both application typechecks and all 98 application tests; see `docs/evidence/sandbox-smoke.txt`.
+
+### Live DeepSeek-generated tests
+
+On 25 November, the agent reviewed priority-filter
+[PR #1](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1), autonomously
+selected six skills, and generated four test files containing **15 new cases**.
+They exercise API query validation and forwarding, Prisma query scoping, client
+priority selection, hook state and the priority dropdown interaction.
+
+The [live workflow](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45591166335)
+passed generation, separate validation and PR reporting. No tool call was rejected
+in the successful run. Input/output usage was **177961 + 10326 = 188287 tokens**
+over ten model requests, including 157952 cached input tokens. Across both successful demonstrations and the two earlier failed live attempts, reported usage was 428513 tokens over 35 requests; `docs/evidence/live-execution.json` records the full breakdown. The generation
+report remains `deferred` because that process cannot execute PR code; the
+separate validator's result is `passed`.
+
+The following comparison uses the feature PR's own baseline, which differs from
+the original application's baseline because the feature adds code and branches:
+
+| Suite | Tests before → after | Statements % | Branches % | Functions % | Lines % |
+|---|---|---|---|---|---|
+| Frontend | 34 → 38 | 65.11 → 70.34 | 53.84 → 58.04 | 61.53 → 64.10 | 65.58 → 70.77 |
+| Backend | 64 → 75 | 65.41 → 66.16 | 78.84 → 82.69 | 71.87 → 71.87 | 67.25 → 67.25 |
+
+Both typechecks passed. All original tests remained present and passing. The
+proposal, resulting patch, test output, public decision and actual validation
+metrics are preserved in `docs/evidence/live-feature/`; CI artifacts also contain
+the raw coverage summaries. The generated tests were applied only inside the
+validation runner. They are available for review as a patch and have not been
+automatically committed to the feature branch.
 
 ## GitHub Actions
 
@@ -289,20 +322,18 @@ The working assumption is that the default branch and its agent dependencies are
 trusted, while every PR may be hostile. The workflow uses no `pull_request_target`,
 performs no automatic merges and makes no application-branch commits.
 
-## Delivery and remaining live setup
+## Delivery and live demonstrations
 
 Repository: [maxikgreat/taskly-unit-test-agent](https://github.com/maxikgreat/taskly-unit-test-agent).
 
 Demonstration: [PR #1 — priority filtering](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1).
 The feature adds a priority dropdown alongside status/search/sort and a validated
-optional priority query on the listing API. Existing tests and typechecks pass.
-The [PR checks run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45478559978)
-passed for all three suites. The
-[agent workflow](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45478687210)
-failed at the missing-key guard, skipped generated-test validation, and
-[posted its actual failure report](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1#issuecomment-7143251846)
-with zero API requests. Context checks, coverage-artifact downloads and the
-separate reporting job completed successfully.
+optional priority query on the listing API. Its
+[ordinary PR checks](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45591047413)
+and [live agent workflow](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45591166335)
+passed. The [PR report](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1#issuecomment-7143251846)
+lists the decision, selected skills, four generated files, API usage, test results,
+coverage deltas and links to reviewable artifacts.
 
 On 25 November, [documentation-only PR #2](https://github.com/maxikgreat/taskly-unit-test-agent/pull/2)
 completed a [successful live run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45590186017):
@@ -311,24 +342,23 @@ and typechecks passed in separate validation with unchanged coverage. It used
 21,769 API tokens over seven requests. Persistent evidence is in
 `docs/evidence/live-docs/`.
 
-At initial delivery on 24 November, live execution was deferred because the API
-key was unavailable. On 25 November, the first authenticated run completed seven
-DeepSeek requests (80,280 total tokens) and invoked analysis, frontend and backend
-skills before a conservative token estimate stopped it prematurely. That failure
-is recorded in `docs/evidence/live-initial-budget-failure.json`. The estimator now
-uses measured prompt usage for retained context; regression tests verify both
-continued execution with available budget and refusal when budget is insufficient.
-Successful live test generation and validation are recorded separately once run.
-Missing-key executions still export a failure report with zero API requests.
+Early live attempts exposed an overly conservative prompt estimate and a budget
+too small to finish a cross-suite review. Those failures are retained in
+`docs/evidence/live-initial-budget-failure.json` and `live-budget-limit.json`.
+The measured-input estimator and configurable CI budget resolved both issues;
+regression tests still enforce refusal when input/output cannot fit the budget.
+No failed attempt is represented as successful validation.
 
-Add the secret using GitHub Settings → Environments → test-agent, or run the
-following interactive command (do not place the secret in a command argument):
+The GitHub secret is configured and both demonstrations have run successfully.
+For a new repository, add the secret through Settings → Environments → test-agent,
+or use this interactive command (never place its value in a command argument):
 
 ```sh
 gh secret set DEEPSEEK_API_KEY --repo maxikgreat/taskly-unit-test-agent --env test-agent
 ```
 
-Then rerun the latest failed `Unit Test Agent` workflow for the demo PR’s current head. Older runs safely skip stale commits. Download and
-review the proposed tests and `tests.patch`, inspect actual validation and coverage,
-and apply the patch only after reviewing it. GitHub reporting uses the built-in
-Actions token; no additional AI subscription is needed.
+Review the generated test proposal and `tests.patch` on the feature PR's reviewed
+commit `dea4f519b1d1dd314e3e293c45c739934dbb9582` before applying it. The persistent
+patch is `docs/evidence/live-feature/tests.patch`. Branches are left unchanged by
+the agent, and neither demo PR is automatically merged. GitHub reporting uses
+the built-in Actions token; no additional AI subscription is needed.

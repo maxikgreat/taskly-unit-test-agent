@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "label": "install-frontend",
+      "passed": true
+    },
+    {
+      "label": "baseline-frontend",
+      "passed": true
+    },
+    {
+      "label": "install-backend",
+      "passed": true
+    },
+    {
+      "label": "baseline-backend",
+      "passed": true
+    },
+    {
+      "label": "apply",
+      "passed": true
+    },
+    {
+      "label": "typecheck-frontend",
+      "passed": true
+    },
+    {
+      "label": "proposed-frontend",
+      "passed": true
+    },
+    {
+      "label": "typecheck-backend",
+      "passed": true
+    },
+    {
+      "label": "proposed-backend",
+      "passed": true
+    },
+    {
+      "label": "intent-to-add",
+      "passed": true
+    },
+    {
+      "label": "intent-to-add",
+      "passed": true
+    },
+    {
+      "label": "intent-to-add",
+      "passed": true
+    },
+    {
+      "label": "intent-to-add",
+      "passed": true
+    }
+  ],
+  "metrics": {
+    "before-frontend": [
+      65.11,
+      53.84,
+      61.53,
+      65.58
+    ],
+    "before-backend": [
+      65.41,
+      78.84,
+      71.87,
+      67.25
+    ],
+    "after-frontend": [
+      70.34,
+      58.04,
+      64.1,
+      70.77
+    ],
+    "after-backend": [
+      66.16,
+      82.69,
+      71.87,
+      67.25
+    ]
+  }
+}
