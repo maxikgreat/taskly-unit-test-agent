@@ -6,6 +6,7 @@ export function useTodoFilters(todos: Todo[]) {
   const [filter, setFilter] = useState<Filter>('all')
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<Sort>('newest')
+  const [priority, setPriority] = useState<'all' | Todo['priority']>('all')
   return {
     filter,
     setFilter,
@@ -13,6 +14,8 @@ export function useTodoFilters(todos: Todo[]) {
     setSearch,
     sort,
     setSort,
-    visible: selectTodos(todos, filter, search, sort),
+    priority,
+    setPriority,
+    visible: selectTodos(todos, filter, search, sort, priority),
   }
 }

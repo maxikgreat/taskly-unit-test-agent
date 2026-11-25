@@ -1,5 +1,5 @@
 import { Input, Select } from '../../../design-system'
-import type { Filter, Sort } from '../types'
+import type { Filter, Sort, Priority } from '../types'
 
 interface TodoFiltersProps {
   filter: Filter
@@ -8,6 +8,8 @@ interface TodoFiltersProps {
   onFilterChange: (filter: Filter) => void
   onSearchChange: (search: string) => void
   onSortChange: (sort: Sort) => void
+  priority?: 'all' | Priority
+  onPriorityChange?: (priority: 'all' | Priority) => void
 }
 
 export function TodoFilters({
@@ -17,6 +19,8 @@ export function TodoFilters({
   onFilterChange,
   onSearchChange,
   onSortChange,
+  priority = 'all',
+  onPriorityChange,
 }: TodoFiltersProps) {
   return (
     <section className="filters-layout" aria-label="Task filters">
@@ -34,6 +38,19 @@ export function TodoFilters({
           { value: 'all', label: 'All statuses' },
           { value: 'active', label: 'To do' },
           { value: 'completed', label: 'Completed' },
+        ]}
+      />
+      <Select
+        label="Filter by priority"
+        value={priority}
+        onChange={(event) =>
+          onPriorityChange?.(event.target.value as 'all' | Priority)
+        }
+        options={[
+          { value: 'all', label: 'All priorities' },
+          { value: 'high', label: 'High' },
+          { value: 'medium', label: 'Medium' },
+          { value: 'low', label: 'Low' },
         ]}
       />
       <Select
