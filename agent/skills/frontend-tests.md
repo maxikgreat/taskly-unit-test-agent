@@ -1,2 +1,4 @@
 # Generate frontend unit tests
 Use Vitest and React Testing Library, matching nearby conventions. Test observable interactions, loading/error states, aborted requests and cache consistency. Mock external HTTP at the boundary; use real QueryClient for hook behavior when practical. Avoid broad component mocks when testing integration. Await asynchronous interactions, clean up timers and spies. Use write_test with complete frontend/src/**/*.agent.test.ts(x) content. Read fixture/setup files before writing tests.
+
+Import every Vitest helper used by the file, including describe when grouping tests; runtime globals are disabled. Annotate reusable domain fixtures with their exported model type so string-union fields do not widen to string. Use letters, digits, underscores or hyphens in the filename before .agent.test; the write_test schema exposes the exact approved path pattern.

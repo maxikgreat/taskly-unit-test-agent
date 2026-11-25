@@ -168,6 +168,15 @@ are mocked. Docker process behavior is mocked in unit tests as well.
 | `AGENT_API_TIMEOUT_MS` | `90000` | Timeout per API attempt |
 | `AGENT_TEST_TIMEOUT_MS` | `120000` | Local sandbox execution timeout |
 
+CI defaults to a cumulative budget of **240000** tokens for reviews involving both
+suites. Repository variables `AGENT_MAX_TOTAL_TOKENS`, `AGENT_MAX_OUTPUT_TOKENS`,
+`AGENT_MAX_ITERATIONS` and `AGENT_MAX_CONTEXT_BYTES` override the workflow limits;
+the same numeric validation and hard ceilings apply. The local default remains
+160000 unless overridden. Live feature analysis demonstrated that 160000 can be
+too small for reading both suites, writing tests and completing validation/report
+tool calls. Per-turn reports include rejected-tool reasons for diagnosis without
+serializing prompts, arguments or private reasoning.
+
 The context guard bounds the first request by UTF-8 bytes. Later requests reuse
 the API's measured prompt-token count, adding an upper bound for newly appended
 JSON bytes and 1024 tokens for message framing. Input and output are reserved
@@ -293,8 +302,14 @@ passed for all three suites. The
 failed at the missing-key guard, skipped generated-test validation, and
 [posted its actual failure report](https://github.com/maxikgreat/taskly-unit-test-agent/pull/1#issuecomment-7143251846)
 with zero API requests. Context checks, coverage-artifact downloads and the
-separate reporting job completed successfully. No live no-test-change PR was
-run; that decision path is demonstrated in mocked orchestration tests.
+separate reporting job completed successfully.
+
+On 25 November, [documentation-only PR #2](https://github.com/maxikgreat/taskly-unit-test-agent/pull/2)
+completed a [successful live run](https://github.com/maxikgreat/taskly-unit-test-agent/actions/runs/45590186017):
+the agent chose `no-test-changes`, proposed zero files, and both application suites
+and typechecks passed in separate validation with unchanged coverage. It used
+21,769 API tokens over seven requests. Persistent evidence is in
+`docs/evidence/live-docs/`.
 
 At initial delivery on 24 November, live execution was deferred because the API
 key was unavailable. On 25 November, the first authenticated run completed seven

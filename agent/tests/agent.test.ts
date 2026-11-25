@@ -98,6 +98,10 @@ describe('agent tool orchestration', () => {
     expect(transcript).toContain('Unknown tool');
     expect(transcript).toContain('Invalid tool arguments');
     expect(transcript).toContain('untrusted');
+    expect(result.report.turns[0].toolErrors).toEqual(expect.arrayContaining([
+      { tool: 'unknown-tool', error: 'Unknown tool' },
+      { tool: 'read_file', error: 'Invalid tool arguments' },
+    ]));
     expect(result.report.status).toBe('no-test-changes');
   });
 
