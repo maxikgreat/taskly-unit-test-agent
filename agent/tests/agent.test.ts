@@ -118,6 +118,39 @@ describe('agent tool orchestration', () => {
     expect(llm.complete).not.toHaveBeenCalled();
   });
 
+  it('uses measured prompt tokens for retained context instead of prematurely exhausting the budget', async () => {
+    await writeFile(path.join(root, 'backend/src/large.ts'), 'x'.repeat(30000));
+    const middle = response([]);
+    middle.usage = { prompt_tokens: 20000, completion_tokens: 50, total_tokens: 20050 };
+    const llm = model([
+      response([...analyze, ['read_file', { path: 'backend/src/large.ts' }]]),
+      middle,
+      response(done()),
+    ]);
+    const config = { ...configuration(), maxTotalTokens: 50000 };
+    const result = await runAgent({ root, llm, config });
+    expect(result.report.status).toBe('no-test-changes');
+    expect(llm.complete).toHaveBeenCalledTimes(3);
+    const third = result.report.turns[2];
+    const remainingBeforeThird = config.maxTotalTokens - 150 - 20050;
+    expect(third.contextBytes).toBeGreaterThan(remainingBeforeThird);
+    expect(third.inputTokenUpperBound).toBeLessThan(remainingBeforeThird);
+    expect(third.inputTokenUpperBound + llm.complete.mock.calls[2][0].max_tokens!).toBeLessThanOrEqual(remainingBeforeThird);
+    const sent = llm.complete.mock.calls[2][0].messages as unknown as { reasoning_content?: string }[];
+    expect(sent.filter((message) => message.reasoning_content).length).toBe(2);
+    expect(result.report.turns[0].tools).toContain('read_file');
+  });
+
+  it('still stops before another request when measured usage leaves too little input/output budget', async () => {
+    const first = response(analyze);
+    first.usage = { prompt_tokens: 10000, completion_tokens: 100, total_tokens: 10100 };
+    const llm = model([first]);
+    const result = await runAgent({ root, llm, config: { ...configuration(), maxTotalTokens: 14000 } });
+    expect(llm.complete).toHaveBeenCalledTimes(1);
+    expect(result.report.summary).toBe('Total token budget reached');
+    expect(result.report.usage.totalTokens).toBe(10100);
+  });
+
   it('redacts configured credentials from public summaries and validation output', async () => {
     vi.stubEnv('DEEPSEEK_API_KEY', 'fake-private-value-for-test');
     const llm = model([response(analyze), response([skill('report'), ['finish', { decision: 'no-test-changes', summary: 'fake-private-value-for-test', limitations: ['fake-private-value-for-test'] }]])]);
